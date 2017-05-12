@@ -123,6 +123,60 @@ module DocusignRest
       http
     end
 
+    # Performs a raw HTTP POST to the DocuSign API
+    def http_post(relative_uri, body, headers: nil)
+      uri = build_uri("/accounts/#{acct_id}/#{relative_uri}")
+      http = initialize_net_http_ssl(uri)
+
+      raw_headers = { "Content-Type" => "application/json" }
+      raw_headers.merge!(headers) if headers
+
+      request = Net::HTTP::Post.new(uri.request_uri, self.headers(raw_headers))
+      request.body = Oj.dump(body)
+      response = http.request(request)
+      Oj.load(response.body)
+    end
+
+    # Performs a raw HTTP PUT to the DocuSign API
+    def http_put(relative_uri, body, headers: nil)
+      uri = build_uri("/accounts/#{acct_id}/#{relative_uri}")
+      http = initialize_net_http_ssl(uri)
+
+      raw_headers = { "Content-Type" => "application/json" }
+      raw_headers.merge!(headers) if headers
+
+      request = Net::HTTP::Put.new(uri.request_uri, self.headers(raw_headers))
+      request.body = Oj.dump(body)
+      response = http.request(request)
+      Oj.load(response.body)
+    end
+
+    # Performs a raw HTTP GET to the DocuSign API
+    def http_get(relative_uri, headers: nil, raw: false)
+      uri = build_uri("/accounts/#{acct_id}/#{relative_uri}")
+      http = initialize_net_http_ssl(uri)
+
+      raw_headers = { "Content-Type" => "application/json" }
+      raw_headers.merge!(headers) if headers
+
+      request = Net::HTTP::Get.new(uri.request_uri, self.headers(raw_headers))
+      response = http.request(request)
+      raw ? response.body : Oj.load(response.body)
+    end
+
+    # Performs a raw HTTP DELETE to the DocuSign API
+    def http_delete(relative_uri, headers: nil)
+      uri = build_uri("/accounts/#{acct_id}/#{relative_uri}")
+      http = initialize_net_http_ssl(uri)
+
+      raw_headers = { "Content-Type" => "application/json" }
+      raw_headers.merge!(headers) if headers
+
+      request = Net::HTTP::Delete.new(uri.request_uri, self.headers(raw_headers))
+      response = http.request(request)
+      Oj.load(response.body)
+    end
+
 
     # Public: creates an OAuth2 authorization server token endpoint.
     #
