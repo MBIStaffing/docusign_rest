@@ -835,6 +835,9 @@ module DocusignRest
     # name          - The template name
     # headers       - Optional hash of headers to merge into the existing
     #                 required headers for a multipart request.
+    # customFields  - (Optional) A hash of listCustomFields and textCustomFields.
+    #                 Each contains an array of corresponding customField hashes.
+    #                 For details, please see: http://bit.ly/1FnmRJx
     #
     # Returns a JSON parsed response body containing the template's:
     #   name - Name given above
@@ -857,7 +860,8 @@ module DocusignRest
           pageCount: 1,
           password: '',
           shared: false
-        }
+        },
+        customFields: options[:custom_fields]
       }.to_json
 
       uri = build_uri("/accounts/#{acct_id}/templates")
